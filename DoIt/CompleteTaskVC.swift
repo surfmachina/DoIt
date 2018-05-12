@@ -10,7 +10,7 @@ import UIKit
 
 class CompleteTaskVC: UIViewController {
 
-    var task = Task()
+    var task : Task? = nil
     var previousVC = TaskViewController()
     
     @IBOutlet weak var tasklabel: UILabel!
@@ -18,10 +18,10 @@ class CompleteTaskVC: UIViewController {
         super.viewDidLoad()
         // Do any additional setup after loading the view.
         
-        if task.important {
-            tasklabel.text = "👁\(task.name)"
+        if task!.important {
+            tasklabel.text = "👁\(task!.name!)"
         } else {
-            tasklabel.text = task.name
+            tasklabel.text = task!.name!
             
         }
         
@@ -29,8 +29,10 @@ class CompleteTaskVC: UIViewController {
     }
 
     @IBAction func CompleteTapped(_ sender: Any) {
-        previousVC.tasks.remove(at: previousVC.selectedindex)
-        previousVC.tableview.reloadData()
+        let context = (UIApplication.shared.delegate as! AppDelegate).persistentContainer.viewContext
+
+        context.delete(task!)
+        (UIApplication.shared.delegate as! AppDelegate).saveContext()
         navigationController!.popViewController(animated: true)
     }
     
